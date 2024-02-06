@@ -1,10 +1,7 @@
 class Api::V1::MerchantsController < ApplicationController
   def index
     merchants = Merchant.all
-    render json: merchants.map do |merchant|
-      MerchantSerializer.new(merchant).serializable_hash
-    end
-    require 'pry'; binding.pry
+    render json: MerchantSerializer.new(merchants)
   end
 
   # def create

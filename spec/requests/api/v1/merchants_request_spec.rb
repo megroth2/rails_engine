@@ -9,14 +9,14 @@ describe "Merchants API" do
     expect(response).to be_successful
     merchants = JSON.parse(response.body, symbolize_names: :true)
 
-    expect(merchants.count).to eq(100)
+    expect(merchants[:data].count).to eq(100)
 
-    merchants.each do |merchant|
+    merchants[:data].each do |merchant|
       expect(merchant).to have_key(:id)
-      expect(merchant[:id]).to be_an(Integer)
-
-      expect(merchant).to have_key(:name)
-      expect(merchant[:name]).to be_a(String)
+      expect(merchant[:id]).to be_a(String)
+      
+      expect(merchant[:attributes]).to have_key(:name)
+      expect(merchant[:attributes][:name]).to be_a(String)
     end
   end
 
@@ -25,8 +25,8 @@ describe "Merchants API" do
 
     merchants = JSON.parse(response.body, symbolize_names: :true)
 
-    expect(merchants.count).to eq(0)
-    expect(merchants).to eq([])
+    expect(merchants[:data].count).to eq(0)
+    expect(merchants[:data]).to eq([])
   end
 
   it "returns an array even if one merchant is found" do
@@ -36,8 +36,8 @@ describe "Merchants API" do
 
     merchants = JSON.parse(response.body, symbolize_names: :true)
 
-    expect(merchants.count).to eq(1)
-    expect(merchants).to be_an(Array)
+    expect(merchants[:data].count).to eq(1)
+    expect(merchants[:data]).to be_an(Array)
   end
 
   it "does not include dependent data of the resource" do
@@ -47,7 +47,7 @@ describe "Merchants API" do
 
     merchants = JSON.parse(response.body, symbolize_names: :true)
 
-    merchants.each do |merchant|
+    merchants[:data].each do |merchant|
       expect(merchant).to_not have_key(:invoice)
       expect(merchant).to_not have_key(:item)
     end
