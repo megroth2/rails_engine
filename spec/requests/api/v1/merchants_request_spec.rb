@@ -2,14 +2,14 @@ require "rails_helper"
 
 describe "Merchants API" do
   it "sends a list of merchants" do
-    FactoryBot.create_list(:merchant, 10)
+    FactoryBot.create_list(:merchant, 100)
 
     get "/api/v1/merchants"
 
     expect(response).to be_successful
     merchants = JSON.parse(response.body, symbolize_names: :true)
 
-    expect(merchants.count).to eq(10)
+    expect(merchants.count).to eq(100)
 
     merchants.each do |merchant|
       expect(merchant).to have_key(:id)
