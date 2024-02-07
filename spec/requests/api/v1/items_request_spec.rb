@@ -94,11 +94,13 @@ describe "Items API" do
     })
 
     post "/api/v1/items"
+# require "pry"; binding.pry
+    # created_item = 
 
     expect(response).to be_successful
-    expect(item.name).to eq(item_params[:name])
-    expect(item.description).to eq(item_params[:description])
-    expect(item.unit_price).to eq(item_params[:unit_price])
+    expect(item[:data][:attributes][:name]).to eq(item_params[:name])
+    expect(item[:data][:attributes][:description]).to eq(item_params[:description])
+    expect(item[:data][:attributes][:unit_price]).to eq(item_params[:unit_price])
   end
 
   xit "returns an error if any attribute is missing" do
