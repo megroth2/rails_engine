@@ -83,4 +83,29 @@ describe "Items API" do
     expect(item[:data][:attributes][:description]).to be_a(String)
     expect(item[:data][:attributes][:unit_price]).to be_a(Float)
   end
+
+  it "creates an item" do
+    merchant = FactoryBot.create(:merchant)
+
+    item_params = ({
+      name: "Glorious Aluminum Knife",
+      description: "How Californians chop down seqoiyas",
+      unit_price: 9.99,
+    })
+
+    post "/api/v1/items"
+
+    expect(response).to be_successful
+    expect(item.name).to eq(item_params[:name])
+    expect(item.description).to eq(item_params[:description])
+    expect(item.unit_price).to eq(item_params[:unit_price])
+  end
+
+  xit "returns an error if any attribute is missing" do
+
+  end
+
+  xit "ignores any attributes sent by the user which are not allowed" do
+
+  end
 end
