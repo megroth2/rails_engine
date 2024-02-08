@@ -133,6 +133,8 @@ describe "Merchants API" do
       # if multiple matches are found
       # expect(merchants[:data].count).to eq(1)
       
+      # get "/api/vi/merchants/find?name=ring"
+
     end
   end
 end

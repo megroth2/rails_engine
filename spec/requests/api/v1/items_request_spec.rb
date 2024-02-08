@@ -376,4 +376,21 @@ describe "Items API" do
       expect(response.status).to eq (404)
     end
   end
+
+  describe "item endpoints" do
+    it "finds all items based on search criteria" do
+     merchant = FactoryBot.create(:merchant)
+     item_1 =Item.create!(name: "Computer Item", description: "fsfsadfs", unit_price: 3.99, merchant_id: merchant.id)
+     item_2 =Item.create!(name: "Turing Item", description: "fsfsadfs", unit_price: 5.99, merchant_id: merchant.id)
+     item_3 =Item.create!(name: "Ring World Item", description: "fsfsadfs", unit_price: 99.99, merchant_id: merchant.id)
+
+      get "/api/vi/items/find_all?name=ring"
+
+      expect(response).to be_successful
+     items = JSON.parse(response.body, symbolize_names: :true)
+# require "pry"; binding.pry
+      # return a single object, if found
+      expect(items[:data].count).to eq(2)
+    end
+  end
 end
