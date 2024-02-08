@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :merchants, :index
-      resources :items, :index
+      resources :items, :index, :update
     end
   end
 
