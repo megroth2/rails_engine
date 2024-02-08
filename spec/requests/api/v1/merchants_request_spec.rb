@@ -52,4 +52,20 @@ describe "Merchants API" do
       expect(merchant).to_not have_key(:item)
     end
   end
+
+  it "sends one merchant" do
+    merchant = FactoryBot.create(:merchant)
+
+    get "/api/v1/merchants/#{merchant.id}"
+
+    expect(response).to be_successful
+
+    merchant = JSON.parse(response.body, symbolize_names: :true)
+
+    expect(merchant[:data]).to have_key(:id)
+    expect(merchant[:data][:id]).to be_a(String)
+
+    expect(merchant[:data][:attributes]).to have_key(:name)
+    expect(merchant[:data][:attributes][:name]).to be_a(String)
+  end
 end
