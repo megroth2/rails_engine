@@ -105,6 +105,7 @@ describe "Items API" do
     expect(created_item.name).to eq(item_params[:name])
     expect(created_item.description).to eq(item_params[:description])
     expect(created_item.unit_price).to eq(item_params[:unit_price])
+    expect(created_item.merchant_id).to eq(item_params[:merchant_id])
   end
 
   it "returns an error if any attribute is missing" do
@@ -143,6 +144,7 @@ describe "Items API" do
     expect(created_item.name).to eq(item_params[:name])
     expect(created_item.description).to eq(item_params[:description])
     expect(created_item.unit_price).to eq(item_params[:unit_price])
+    expect(created_item.merchant_id).to eq(item_params[:merchant_id])
     expect(created_item).not_to eq(item_params[:fluffy_unicorn])
   end
 end
