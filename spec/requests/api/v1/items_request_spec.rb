@@ -72,6 +72,7 @@ describe "Items API" do
       merchant_1 = FactoryBot.create(:merchant)
       merchant_2 = FactoryBot.create(:merchant)
       item_1 = FactoryBot.create(:item, merchant_id: merchant_1.id)
+      headers = {"CONTENT_TYPE" => "application/json"}
 
       request_body = {
         "name": "necklace",
@@ -80,13 +81,13 @@ describe "Items API" do
         "merchant_id": merchant_2.id
       }
 
-      patch "/api/v1/items/#{item_1.id}", params: {item: request_body}
-      
+      patch "/api/v1/items/#{item_1.id}", headers: headers, params: JSON.generate({item: request_body})     
+
+      item_1.reload
+
       expect(response).to be_successful
 
-      # binding.pry
-
-      expect(item_1.name).to eq("necklace") # item isn't updating properly
+      expect(item_1.name).to eq("necklace")
       expect(item_1.description).to eq("pearl necklace")
       expect(item_1.unit_price).to eq(19.99)
       expect(item_1.merchant_id).to eq(merchant_2.id)
@@ -96,6 +97,7 @@ describe "Items API" do
       merchant_1 = FactoryBot.create(:merchant)
       merchant_2 = FactoryBot.create(:merchant)
       item_1 = FactoryBot.create(:item, merchant_id: merchant_1.id)
+      headers = {"CONTENT_TYPE" => "application/json"}
 
       request_body = {
         "name": "necklace",
@@ -104,22 +106,21 @@ describe "Items API" do
         "merchant_id": merchant_2.id
       }
 
-      patch "/api/v1/items/#{item_1.id}", params: {item: request_body}      
+      patch "/api/v1/items/#{item_1.id}", headers: headers, params: JSON.generate({item: request_body})     
+
+      item_1.reload
 
       expect(response).to be_successful
-      item = JSON.parse(response.body, sybmolize_names: :true)
 
-      # binding.pry
+      item = JSON.parse(response.body, symbolize_names: :true)
 
-      expect(item[:data][:attributes][:name]).to eq("necklace") # NoMethodError: undefined method `[]' for nil:NilClass
+      expect(item[:data][:attributes][:name]).to eq("necklace")
       expect(item[:data][:attributes][:description]).to eq("pearl necklace")
       expect(item[:data][:attributes][:unit_price]).to eq(19.99)
       expect(item[:data][:attributes][:merchant_id]).to eq(merchant_2.id)
     end
 
-    xit "" do
-      
-    end
+
   end
 
   it "sends one item" do

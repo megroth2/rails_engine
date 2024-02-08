@@ -9,19 +9,17 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def update
-    item = Item.find(params[:id]) # whats the best way to implement error handling for when the item is not found? Would it be to add a helper method with if else statements like the one below?
-    if item.update!(item_params) 
+    item = Item.find(params[:id])
+    if item.update(item_params) 
       render json: ItemSerializer.new(item)
-      # render json: Item.update(params[:id], item_params)
     else
-      # Add Error Handling
+      render json: { error: "Item not found" }, status: :not_found
     end
   end
 
   private
 
-    def item_params
-      params.require(:item).permit(:name, :description, :unit_price, :merchant_id)
-      # binding.pry
-    end
+  def item_params
+    params.require(:item).permit(:name, :description, :unit_price, :merchant_id)
+  end
 end
