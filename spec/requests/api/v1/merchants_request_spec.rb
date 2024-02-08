@@ -112,7 +112,7 @@ describe "Merchants API" do
     it "returns a 404 HTTP status code if merchant is not found" do
       get "/api/v1/merchants/1/items"
 
-      expect(response).to be_successful
+      expect(response).to_not be_successful
       expect(response.status).to eq (404)
     end
   end
