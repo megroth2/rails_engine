@@ -1,4 +1,23 @@
 class Item < ApplicationRecord
+  belongs_to :merchant
   has_many :invoice_items
+  has_many :invoices, through: :invoice_items
 
+  def destroy_with_invoice_items_and_invoices
+    invoices_to_destroy = Invoice.joins(:invoice_items)
+                                  .where(invoice_items: { item_id: self.id })
+                                  .group(:id)
+                                  .having('COUNT(*) = 1')
+  
+    invoice_ids_to_destroy = invoices_to_destroy.pluck(:id)
+  
+    invoices_to_destroy.each do |invoice|
+      invoice.invoice_items.destroy_all
+      invoice.destroy
+    end
+    self.destroy
+  end
 end
+
+
+

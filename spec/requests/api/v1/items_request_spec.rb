@@ -102,7 +102,7 @@ describe "Items API" do
       expect{Item.find(item.id)}.to raise_error(ActiveRecord::RecordNotFound)
     end
 
-    it "destroys any invoice where this was the only item on an invoice" do
+    it "destroys any INVOICE ITEMS where this was the only item on an invoice" do
       merchant = FactoryBot.create(:merchant)
       item = FactoryBot.create(:item, merchant_id: merchant.id)
 
@@ -110,21 +110,47 @@ describe "Items API" do
       invoice = FactoryBot.create(:invoice, merchant_id: merchant.id, customer_id: customer.id)
       invoice_item = FactoryBot.create(:invoice_item, item_id: item.id, invoice_id: invoice.id)
 
-      expect(Invoice.count).to eq(1)
+      expect(InvoiceItem.count).to eq(1)
 
       delete "/api/v1/items/#{item.id}"
 
       expect(response).to be_successful
-      expect(Invoice.count).to eq(0)
-      expect{Invoice.find(invoice.id)}.to raise_error(ActiveRecord::RecordNotFound)
+      expect(InvoiceItem.count).to eq(0)
+      expect{InvoiceItem.find(invoice_item.id)}.to raise_error(ActiveRecord::RecordNotFound)
     end
 
-    xit "returns a 204 HTTP status code" do
+    # unclear on the requirements - is this expected as well?
+    # it "destroys any INVOICES where this was the only item on an invoice" do
+    #   merchant = FactoryBot.create(:merchant)
+    #   item = FactoryBot.create(:item, merchant_id: merchant.id)
 
-    end
+    #   customer = FactoryBot.create(:customer)
+    #   invoice = FactoryBot.create(:invoice, merchant_id: merchant.id, customer_id: customer.id)
+    #   invoice_item = FactoryBot.create(:invoice_item, item_id: item.id, invoice_id: invoice.id)
 
-    xit "doesn't return any JSON body" do
+    #   expect(InvoiceItem.count).to eq(1)
 
+    #   delete "/api/v1/items/#{item.id}"
+
+    #   expect(response).to be_successful
+    #   expect(InvoiceItem.count).to eq(0)
+    #   expect{InvoiceItem.find(invoice_item.id)}.to raise_error(ActiveRecord::RecordNotFound)
+    # end
+
+    # it "doesn't destroy INVOICES where this was NOT the only item on an invoice" do
+    #   # additional test to write if there's time
+    #   # add multiple items to an invoice and make sure the invoice isn't deleted
+    # end
+
+    it "returns a 204 HTTP status code and nothing in the response body" do
+      merchant = FactoryBot.create(:merchant)
+      item = FactoryBot.create(:item, merchant_id: merchant.id)
+    
+      delete "/api/v1/items/#{item.id}"
+
+      expect(response).to be_successful
+      expect(response.status).to eq (204)
+      expect(response.body).to be_empty
     end
   end
 end

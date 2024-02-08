@@ -10,8 +10,6 @@ class Api::V1::ItemsController < ApplicationController
 
   def destroy
     item = Item.find(params[:id])
-    item.invoice_items.destroy # can't destroy an item without first destroying invoice items
-    item.destroy
-    render json: ItemSerializer.new(item)
+    item.destroy_with_invoice_items_and_invoices
   end
 end
