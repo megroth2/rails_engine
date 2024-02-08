@@ -137,7 +137,7 @@ describe "Items API" do
 
       item_1.reload
 
-      # expect(response).to be_successful
+      expect(response).to_not be_successful
 
       item = JSON.parse(response.body, symbolize_names: :true)
 
@@ -353,5 +353,27 @@ describe "Items API" do
     expect(created_item.unit_price).to eq(item_params[:unit_price])
     expect(created_item.merchant_id).to eq(item_params[:merchant_id])
     expect(created_item).not_to eq(item_params[:fluffy_unicorn])
+  end
+
+  describe "get an item's merchant" do
+    it "sends a merchant for a given item" do
+      merchant = FactoryBot.create(:merchant)
+      item = FactoryBot.create(:item, merchant_id: merchant.id)
+
+      get "/api/v1/items/#{item.id}/merchant"
+
+      expect(response).to be_successful
+      
+      item_merchant = JSON.parse(response.body, symbolize_names: :true)
+
+      expect(item_merchant[:data][:id]).to eq(merchant.id.to_s)
+    end
+
+    it "returns a 404 HTTP status code if item is not found" do
+      get "/api/v1/items/1/merchant"
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq (404)
+    end
   end
 end
