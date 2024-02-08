@@ -39,6 +39,11 @@ class Api::V1::ItemsController < ApplicationController
     item.destroy_with_invoice_items_and_invoices
   end
 
+  def merchant
+    item = Item.find(params[:id])
+    render json: MerchantSerializer.new(item.merchant)
+  end
+
   private
 
   def item_params
