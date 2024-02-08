@@ -8,6 +8,13 @@ class Api::V1::ItemsController < ApplicationController
     render json: ItemSerializer.new(Item.find(params[:id]))
   end
 
+  def update
+    item = Item.find(params[:id])
+    if item.update(item_params) 
+      render json: ItemSerializer.new(item)
+    else
+      render json: { error: "Item not found" }, status: :not_found
+  
   def create
     new_item = Item.new(item_params)
     if new_item.save
