@@ -120,7 +120,29 @@ describe "Items API" do
       expect(item[:data][:attributes][:merchant_id]).to eq(merchant_2.id)
     end
 
+    it "bad postman merchant id test" do
+      merchant_1 = FactoryBot.create(:merchant)
+      merchant_2 = FactoryBot.create(:merchant)
+      item_1 = FactoryBot.create(:item, merchant_id: merchant_1.id)
+      headers = {"CONTENT_TYPE" => "application/json"}
 
+      request_body = {
+        "name": "necklace",
+        "description": "pearl necklace",
+        "unit_price": 19.99,
+        "merchant_id": 0
+      }
+
+      patch "/api/v1/items/#{item_1.id}", headers: headers, params: JSON.generate({item: request_body})     
+
+      item_1.reload
+
+      # expect(response).to be_successful
+
+      item = JSON.parse(response.body, symbolize_names: :true)
+
+      expect(response.status).to eq(404) 
+    end
   end
 
   it "sends one item" do
