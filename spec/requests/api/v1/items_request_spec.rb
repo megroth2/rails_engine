@@ -112,7 +112,7 @@ describe "Items API" do
     item_params = {
                   "name": "value1",
                   "unit_price": 100.99,
-                  "merchant_id": merchant.id # couldn't hardcode the number due to thousands of merchants being created through running tests
+                  "merchant_id": merchant.id
                   }
 
     headers = { "CONTENT_TYPE" => "application/json" }
@@ -122,7 +122,27 @@ describe "Items API" do
     expect(response.status).to eq(422)
   end
 
-  xit "ignores any attributes sent by the user which are not allowed" do
+  it "ignores any attributes sent by the user which are not allowed" do
+    merchant = FactoryBot.create(:merchant)
+    item_params = {
+                  "name": "value1",
+                  "description": "value2",
+                  "unit_price": 100.99,
+                  "merchant_id": merchant.id,
+                  "fluffy_unicorn": "Sparkle Horn"
+                  }
 
+    headers = { "CONTENT_TYPE" => "application/json" }
+
+    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+
+    created_item = Item.last
+
+    expect(response).to be_successful
+
+    expect(created_item.name).to eq(item_params[:name])
+    expect(created_item.description).to eq(item_params[:description])
+    expect(created_item.unit_price).to eq(item_params[:unit_price])
+    expect(created_item).not_to eq(item_params[:fluffy_unicorn])
   end
 end
