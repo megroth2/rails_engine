@@ -85,21 +85,24 @@ describe "Items API" do
   end
 
   it "creates an item" do
+    merchant = FactoryBot.create(:merchant)
+    item_params = {
+                  "name": "value1",
+                  "description": "value2",
+                  "unit_price": 100.99,
+                  "merchant_id": merchant.id # couldn't hardcode the number due to thousands of merchants being created through running tests
+                  }
 
-    item_params = ({
-      name: "Glorious Aluminum Knife",
-      description: "How Californians chop down seqoiyas",
-      unit_price: 9.99,
-    })
+    headers = { "CONTENT_TYPE" => "application/json" }
 
-    post "/api/v1/items", params: { item: item_params }
+    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
 
-    created_item = JSON.parse(response.body, symbolize_names: true)
-# require "pry"; binding.pry
+    created_item = Item.last
+
     expect(response).to be_successful
-    expect(created_item[:data][:attributes][:name]).to eq(item_params[:name])
-    expect(created_item[:data][:attributes][:description]).to eq(item_params[:description])
-    expect(created_item[:data][:attributes][:unit_price]).to eq(item_params[:unit_price])
+    expect(created_item.name).to eq(item_params[:name])
+    expect(created_item.description).to eq(item_params[:description])
+    expect(created_item.unit_price).to eq(item_params[:unit_price])
   end
 
   xit "returns an error if any attribute is missing" do
