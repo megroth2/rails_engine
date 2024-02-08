@@ -86,7 +86,7 @@ describe "Merchants API" do
       expect(merchant_items[:data].count).to eq(10)
     end
 
-    xit "does NOT send items from another merchant" do
+    it "does NOT send items from another merchant" do
       merchant_1 = FactoryBot.create(:merchant)
       merchant_2 = FactoryBot.create(:merchant)
 
@@ -98,12 +98,11 @@ describe "Merchants API" do
       expect(response).to be_successful
       merchant_items = JSON.parse(response.body, symbolize_names: :true)
       
-      # binding.pry
       expect(merchant_items[:data].count).to eq(6)
 
       get "/api/v1/merchants/#{merchant_2.id}/items"
 
-      expect(response).to be_successful # why is the response body returning all items and not the merchant's items?
+      expect(response).to be_successful
       merchant_items = JSON.parse(response.body, symbolize_names: :true)
 
       expect(merchant_items[:data].count).to eq(3)
@@ -112,8 +111,7 @@ describe "Merchants API" do
     it "returns a 404 HTTP status code if merchant is not found" do
       get "/api/v1/merchants/1/items"
 
-      # binding.pry
-      # expect(response).to_not be_successful
+      expect(response).to_not be_successful
       expect(response.status).to eq (404)
     end
   end
