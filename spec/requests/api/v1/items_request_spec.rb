@@ -354,4 +354,47 @@ describe "Items API" do
     expect(created_item.merchant_id).to eq(item_params[:merchant_id])
     expect(created_item).not_to eq(item_params[:fluffy_unicorn])
   end
+
+  describe "get an item's merchant" do
+    it "sends a merchant for a given item" do
+      merchant = FactoryBot.create(:merchant)
+      item = FactoryBot.create(:item, merchant_id: merchant.id)
+
+      get "/api/v1/items/#{item.id}/merchant"
+      # require "pry"; binding.pry
+      expect(response).to be_successful
+      item_merchant = JSON.parse(response.body, symbolize_names: :true)
+
+      expect(item_merchant[:data][:id]).to eq(merchant.id.to_s)
+    end
+
+    xit "does NOT send items from another merchant" do
+      merchant_1 = FactoryBot.create(:merchant)
+      merchant_2 = FactoryBot.create(:merchant)
+
+      merchant_1_items = FactoryBot.create_list(:item, 6, merchant_id: merchant_1.id)
+      merchant_2_items = FactoryBot.create_list(:item, 3, merchant_id: merchant_2.id)
+
+      get "/api/v1/merchants/#{merchant_1.id}/items"
+      
+      expect(response).to be_successful
+      merchant_items = JSON.parse(response.body, symbolize_names: :true)
+      
+      expect(merchant_items[:data].count).to eq(6)
+
+      get "/api/v1/merchants/#{merchant_2.id}/items"
+
+      expect(response).to be_successful
+      merchant_items = JSON.parse(response.body, symbolize_names: :true)
+
+      expect(merchant_items[:data].count).to eq(3)
+    end
+
+    xit "returns a 404 HTTP status code if merchant is not found" do
+      get "/api/v1/merchants/1/items"
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq (404)
+    end
+  end
 end
