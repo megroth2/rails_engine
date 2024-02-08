@@ -107,8 +107,19 @@ describe "Items API" do
     expect(created_item.unit_price).to eq(item_params[:unit_price])
   end
 
-  xit "returns an error if any attribute is missing" do
+  it "returns an error if any attribute is missing" do
+    merchant = FactoryBot.create(:merchant)
+    item_params = {
+                  "name": "value1",
+                  "unit_price": 100.99,
+                  "merchant_id": merchant.id # couldn't hardcode the number due to thousands of merchants being created through running tests
+                  }
 
+    headers = { "CONTENT_TYPE" => "application/json" }
+
+    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+
+    expect(response.status).to eq(422)
   end
 
   xit "ignores any attributes sent by the user which are not allowed" do
