@@ -14,6 +14,13 @@ class Api::V1::ItemsController < ApplicationController
       render json: ItemSerializer.new(item)
     else
       render json: { error: "Item not found" }, status: :not_found
+  
+  def create
+    new_item = Item.new(item_params)
+    if new_item.save
+      render json: ItemSerializer.new(new_item), status: :created
+    else
+      render json: { error: "Missing attribute(s) for item creation" }, status: :unprocessable_entity
     end
   end
 
