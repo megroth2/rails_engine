@@ -198,7 +198,7 @@ describe "Items API" do
     end
 
     # unclear on the requirements - is this expected as well?
-    # it "destroys any INVOICES where this was the only item on an invoice" do
+    # xit "destroys any INVOICES where this was the only item on an invoice" do
     #   merchant = FactoryBot.create(:merchant)
     #   item = FactoryBot.create(:item, merchant_id: merchant.id)
 
@@ -213,11 +213,6 @@ describe "Items API" do
     #   expect(response).to be_successful
     #   expect(InvoiceItem.count).to eq(0)
     #   expect{InvoiceItem.find(invoice_item.id)}.to raise_error(ActiveRecord::RecordNotFound)
-    # end
-
-    # it "doesn't destroy INVOICES where this was NOT the only item on an invoice" do
-    #   # additional test to write if there's time
-    #   # add multiple items to an invoice and make sure the invoice isn't deleted
     # end
 
     it "returns a 204 HTTP status code and nothing in the response body" do
