@@ -14,6 +14,8 @@ class Api::V1::ItemsController < ApplicationController
       render json: ItemSerializer.new(item)
     else
       render json: { error: "Item not found" }, status: :not_found
+    end
+  end
   
   def create
     new_item = Item.new(item_params)
@@ -22,6 +24,11 @@ class Api::V1::ItemsController < ApplicationController
     else
       render json: { error: "Missing attribute(s) for item creation" }, status: :unprocessable_entity
     end
+  end
+
+  def destroy
+    item = Item.find(params[:id])
+    item.destroy_with_invoice_items_and_invoices
   end
 
   private

@@ -39,6 +39,7 @@ gem "jsonapi-serializer"
 group :test do
   gem "simplecov"
   gem "rspec-rails"
+  gem "shoulda-matchers"
 end
 
 group :development, :test do
