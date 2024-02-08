@@ -9,8 +9,12 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def create
-    new_item = Item.create(item_params)
-    render json: ItemSerializer.new(new_item)
+    new_item = Item.new(item_params)
+    if new_item.save
+      render json: ItemSerializer.new(new_item), status: :created
+    else
+      render json: { error: "Missing attribute(s) for item creation" }
+    end
   end
 
   private

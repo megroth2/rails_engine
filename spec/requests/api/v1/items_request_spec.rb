@@ -100,6 +100,8 @@ describe "Items API" do
     created_item = Item.last
 
     expect(response).to be_successful
+    expect(response.status).to eq(201)
+
     expect(created_item.name).to eq(item_params[:name])
     expect(created_item.description).to eq(item_params[:description])
     expect(created_item.unit_price).to eq(item_params[:unit_price])
