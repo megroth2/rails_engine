@@ -3,10 +3,10 @@ class Api::V1::ItemsController < ApplicationController
   # refactor idea: remove nested if statements from index action
   def index
     if params[:merchant_id]
-      merchant = Merchant.find(params[:merchant_id])
-      if merchant
+      begin
+        merchant = Merchant.find(params[:merchant_id])
         render json: ItemSerializer.new(merchant.items)
-      else
+      rescue ActiveRecord::RecordNotFound
         render json: { error: "Merchant not found" }, status: :not_found
       end
     else
