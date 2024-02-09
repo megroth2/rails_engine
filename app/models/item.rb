@@ -7,6 +7,7 @@ class Item < ApplicationRecord
   validates :description, presence: true
   validates :unit_price, presence: true
 
+  # refactor needed: not passing all rspec tests (see commented out tests in item_spec.rb and items_request_spec.rb)
   def destroy_with_invoice_items_and_invoices
     invoices_to_destroy = Invoice.joins(:invoice_items)
                                   .where(invoice_items: { item_id: self.id })

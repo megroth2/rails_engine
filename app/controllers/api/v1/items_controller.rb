@@ -1,4 +1,5 @@
 class Api::V1::ItemsController < ApplicationController
+  # refactor idea: remove nested if statements
   def index
     if params[:merchant_id]
       merchant = Merchant.find(params[:merchant_id])

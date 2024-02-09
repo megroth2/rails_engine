@@ -27,6 +27,7 @@ RSpec.describe Item do
       expect(Invoice.count).to eq(0)
     end
 
+    # refactor needed on destroy_with_invoice_items_and_invoices method in item.rb to make this pass
     # xit "doesn't destroy invoices if there's more than one item on the invoice" do
     #   merchant = FactoryBot.create(:merchant)
     #   item_1 = FactoryBot.create(:item, merchant_id: merchant.id)

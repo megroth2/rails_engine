@@ -197,6 +197,7 @@ describe "Items API" do
       expect{InvoiceItem.find(invoice_item.id)}.to raise_error(ActiveRecord::RecordNotFound)
     end
 
+    # refactor needed on destroy_with_invoice_items_and_invoices method in item.rb to make this pass
     # xit "destroys any INVOICES where this was the only item on an invoice" do
     #   merchant = FactoryBot.create(:merchant)
     #   item = FactoryBot.create(:item, merchant_id: merchant.id)
