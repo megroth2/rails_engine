@@ -1,4 +1,4 @@
-class Api::V1::FindMerchantsController < ApplicationController
+class Api::V1::Items::ItemMerchantsController < ApplicationController
   def index
     if params[:name].present?
       render_merchant_by_name(params[:name])

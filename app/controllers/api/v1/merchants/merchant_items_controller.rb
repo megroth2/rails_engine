@@ -1,4 +1,4 @@
-class Api::V1::FindItemsController < ApplicationController  
+class Api::V1::Merchants::MerchantItemsController < ApplicationController  
   # refactor idea: move into helper methods
   # refactor idea: move error handling logic to the application controller
   def index
