@@ -408,7 +408,7 @@ describe "Items API" do
       end
     end
 
-    describe "index action sad paths - no item found"
+    describe "index action sad paths - no item found" do
       xit "sad path - no item found by name fragment" do
         # expect error
       end
@@ -426,7 +426,7 @@ describe "Items API" do
       end
     end
 
-    describe "index action sad paths - less than 0"
+    describe "index action sad paths - less than 0" do
       xit "sad path - min price is less than 0" do
         
       end
@@ -436,7 +436,7 @@ describe "Items API" do
       end
     end
 
-    describe "index action sad paths - sent too many criteria"
+    describe "index action sad paths - sent too many criteria" do
       xit "sad path - cannot send name and min price" do
         
       end
