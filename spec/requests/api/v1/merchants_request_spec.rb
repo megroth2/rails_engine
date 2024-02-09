@@ -115,4 +115,25 @@ describe "Merchants API" do
       expect(response.status).to eq (404)
     end
   end
+
+  describe "merchant 'find one' endpoints" do
+    it "returns a single object, if found" do
+      merchant_1 = Merchant.create(name: "Computers R' Us")
+      merchant_2 = Merchant.create(name: "Turing")
+      merchant_3 = Merchant.create(name: "Ring World")
+
+      get "/api/v1/merchants/find?name=ring"
+
+      expect(response).to be_successful
+      merchant = JSON.parse(response.body, symbolize_names: :true)
+      # return a single object, if found
+      expect(merchant[:data].count).to eq(1)
+      # return the first object in the database in case-insensitive alphabetical order
+      # if multiple matches are found
+      expect(merchant[:data].first[:attributes][:name]).to eq("Ring World")
+
+
+
+    end
+  end
 end

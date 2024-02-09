@@ -7,6 +7,10 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  get "/api/v1/items/:id/merchant", to: "api/v1/items#merchant"
+  get "/api/v1/merchants/find", to: "api/v1/find_merchants#index"
+  get "/api/v1/items/find_all", to: "api/v1/find_items#index"
+ 
   namespace :api do
     namespace :v1 do
       resources :merchants, only: [:index, :show] do
@@ -16,6 +20,4 @@ Rails.application.routes.draw do
     end
   end
 
-  get "/api/v1/items/:id/merchant", to: "api/v1/items#merchant"
-  
 end
