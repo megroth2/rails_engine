@@ -410,7 +410,6 @@ describe "Items API" do
         expect(response).to be_successful
         items = JSON.parse(response.body, symbolize_names: :true)
 
-        # binding.pry
         expect(items[:data].count).to eq(1)
         expect(items[:data].first[:attributes][:name]).to eq(item_2.name)
       end
