@@ -122,18 +122,17 @@ describe "Merchants API" do
       merchant_2 = Merchant.create(name: "Turing")
       merchant_3 = Merchant.create(name: "Ring World")
 
-      get "/api/vi/merchants/find?name=ring"
+      get "/api/v1/merchants/find?name=ring"
 
       expect(response).to be_successful
-      merchants = JSON.parse(response.body, symbolize_names: :true)
-
+      merchant = JSON.parse(response.body, symbolize_names: :true)
       # return a single object, if found
-      expect(merchants[:data].count).to eq(1)
+      expect(merchant[:data].count).to eq(1)
       # return the first object in the database in case-insensitive alphabetical order
       # if multiple matches are found
-      # expect(merchants[:data].count).to eq(1)
-      
-      # get "/api/vi/merchants/find?name=ring"
+      expect(merchant[:data].first[:attributes][:name]).to eq("Ring World")
+
+
 
     end
   end
