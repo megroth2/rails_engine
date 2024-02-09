@@ -444,7 +444,7 @@ describe "Items API" do
 
     describe "index action sad paths - no item found" do
       xit "sad path - no item found by name fragment" do
-        # expect error
+       
       end
 
       xit "sad path - no item found by min and max price" do
@@ -462,21 +462,29 @@ describe "Items API" do
 
     describe "index action sad paths - less than 0" do
       xit "sad path - min price is less than 0" do
-        
+        # pm.expect(error).to.equal(null);
+        # pm.expect(response.code).to.eq(400);
+        # var payload = response.json();
+        # pm.expect(payload).to.have.property('errors')
       end
 
       xit "sad path - max price is less than 0" do
-        
+        # pm.expect(error).to.equal(null);
+        # pm.expect(response.code).to.eq(400);
+        # var payload = response.json();
+        # pm.expect(payload).to.have.property('errors')
       end
     end
 
     describe "index action sad paths - sent too many criteria" do
       xit "sad path - cannot send name and min price" do
-        
+        # pm.expect(error).to.equal(null);
+        # pm.expect(response.code).to.eq(400);
       end
 
       xit "sad path - cannot send name and max price" do
-        
+        # pm.expect(error).to.equal(null);
+        # pm.expect(response.code).to.eq(400); 
       end
     end
   end

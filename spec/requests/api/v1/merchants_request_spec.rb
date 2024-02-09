@@ -116,7 +116,7 @@ describe "Merchants API" do
     end
   end
 
-  xdescribe "get one merchant based on search criteria" do
+  describe "get one merchant based on search criteria" do
     it "finds one merchant by name fragment" do
       merchant_1 = Merchant.create(name: "Computers R' Us")
       merchant_2 = Merchant.create(name: "Turing")
@@ -126,7 +126,9 @@ describe "Merchants API" do
 
       expect(response).to be_successful
       merchants = JSON.parse(response.body, symbolize_names: :true)
-      expect(merchants[:data].count).to eq(1)
+
+      expect(merchants.count).to eq(1)
+      expect(merchants[:data][:id].to_i).to eq(merchant_3.id)
     end
 
     xit "no merchant found by name fragment" do
