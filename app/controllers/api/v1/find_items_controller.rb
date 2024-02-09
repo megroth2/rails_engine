@@ -1,4 +1,6 @@
 class Api::V1::FindItemsController < ApplicationController  
+  # refactor idea: move into helper methods
+  # refactor idea: move error handling logic to the application controller
   def index
     if params[:name] && params[:name].blank?
       render json: { error: "Name fragment is empty" }, status: :bad_request
