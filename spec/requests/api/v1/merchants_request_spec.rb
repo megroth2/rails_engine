@@ -116,7 +116,7 @@ describe "Merchants API" do
     end
   end
 
-  xdescribe "get one merchant based on search criteria" do
+  describe "get one merchant based on search criteria" do
     it "finds one merchant by name fragment" do
       merchant_1 = Merchant.create(name: "Computers R' Us")
       merchant_2 = Merchant.create(name: "Turing")
@@ -125,30 +125,30 @@ describe "Merchants API" do
       get "/api/v1/merchants/find?name=ring"
 
       expect(response).to be_successful
-      merchant = JSON.parse(response.body, symbolize_names: :true)
+      merchant = JSON.parse(response.body)
       # return a single object, if found
-      expect(merchant[:data].count).to eq(1)
+      expect(merchant.count).to eq(1)
       # return the first object in the database in case-insensitive alphabetical order
       # if multiple matches are found
-      expect(merchant[:data].first[:attributes][:name]).to eq("Ring World")
-      # expect(merchants[:data][:id].to_i).to eq(merchant_3.id)
+      expect(merchant.first[1]["id"]).to eq("#{merchant_3.id}")
     end
 
-    xit "sad path, no fragment matched" do
+    it "sad path, no fragment matched" do
       get "/api/v1/merchants/find?name=ring"
 
       expect(response).to be_successful
+      expect(response.status).to eq(200)
+      
       merchants = JSON.parse(response.body, symbolize_names: :true)
 
       expect(merchants[:data].count).to eq(0)
-      expect(merchants[:data]).to eq(nil)
+    end
 
-      # pm.expect(error).to.equal(null);
-      # pm.response.to.have.status(200);
-      # var payload = response.json();
-      # pm.expect(payload).to.have.property('data');
-      # pm.expect(payload.data).to.be.an('object');
-      # pm.expect(payload.data.keys).to.eq(undefined);
+    it "sad path, name fragment is empty" do
+      get "/api/v1/merchants/find?name="
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
     end
   end
 end
