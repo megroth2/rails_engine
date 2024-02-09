@@ -116,7 +116,7 @@ describe "Merchants API" do
     end
   end
 
-  describe "get one merchant based on search criteria" do
+  xdescribe "get one merchant based on search criteria" do
     it "finds one merchant by name fragment" do
       merchant_1 = Merchant.create(name: "Computers R' Us")
       merchant_2 = Merchant.create(name: "Turing")

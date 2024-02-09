@@ -21,6 +21,21 @@ class Item < ApplicationRecord
     end
     self.destroy
   end
+
+  def self.find_items_by_name(name_fragment)
+    Item.where("lower(name) LIKE ?", "%#{name_fragment.downcase}%")
+    .order(:name)
+  end
+
+  def self.find_items_by_min_and_max_price(min_price, max_price)
+    Item.where(unit_price: min_price.to_f..max_price.to_f)
+    .order(:name)
+  end
+
+  def self.find_items_by_min_price(min_price)
+    Item.where(unit_price >= min_price.to_f)
+    .order(:name)
+  end
 end
 
 

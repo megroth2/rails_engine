@@ -3,6 +3,6 @@ class Api::V1::FindMerchantsController < ApplicationController
     render json: MerchantSerializer.new(Merchant
           .where("lower(name) LIKE ?", "%#{params[:name].downcase}%")
           .order(:name)
-          .limit(1))
+          .first)
   end
 end

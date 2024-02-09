@@ -381,9 +381,9 @@ describe "Items API" do
     describe "index action happy paths" do
       it "finds all items by name fragment" do
         merchant = FactoryBot.create(:merchant)
-        item_1 =Item.create!(name: "Computer Item", description: "fsfsadfs", unit_price: 3.99, merchant_id: merchant.id)
-        item_2 =Item.create!(name: "Turing Item", description: "fsfsadfs", unit_price: 5.99, merchant_id: merchant.id)
-        item_3 =Item.create!(name: "Ring World Item", description: "fsfsadfs", unit_price: 99.99, merchant_id: merchant.id)
+        item_1 = FactoryBot.create(:item, name: "Computer Item", merchant_id: merchant.id)
+        item_2 = FactoryBot.create(:item, name: "Turing Item", merchant_id: merchant.id)
+        item_3 = FactoryBot.create(:item, name: "Ring World Item", merchant_id: merchant.id)
 
         get "/api/v1/items/find_all?name=ring"
 
@@ -391,15 +391,38 @@ describe "Items API" do
         items = JSON.parse(response.body, symbolize_names: :true)
 
         expect(items[:data].count).to eq(2)
-        # expect(items[:data].)
-
+        expect(items[:data].first[:attributes][:name]).to eq(item_3.name)
+        expect(items[:data].second[:attributes][:name]).to eq(item_2.name)
       end
 
-      xit "finds all items by min and max price" do
+      it "finds all items by min and max price" do
+        merchant = FactoryBot.create(:merchant)
+        item_1 = FactoryBot.create(:item, unit_price: 3.99, merchant_id: merchant.id)
+        item_2 = FactoryBot.create(:item, unit_price: 12.34, merchant_id: merchant.id)
+        item_3 = FactoryBot.create(:item, unit_price: 100, merchant_id: merchant.id)
 
+        get "/api/v1/items/find_all?min_price=4.99&max_price=99.99"
+
+        expect(response).to be_successful
+        items = JSON.parse(response.body, symbolize_names: :true)
+
+        expect(items[:data].count).to eq(1)
+        expect(items[:data].first[:attributes][:id]).to eq(item_2.id)
       end
 
       xit "finds all items by min price" do
+        merchant = FactoryBot.create(:merchant)
+        item_1 = Item.create!(name: "Computer Item", description: "fsfsadfs", unit_price: 49.00, merchant_id: merchant.id)
+        item_2 = Item.create!(name: "Turing Item", description: "fsfsadfs", unit_price: 75.55, merchant_id: merchant.id)
+        item_3 = Item.create!(name: "Ring World Item", description: "fsfsadfs", unit_price: 100, merchant_id: merchant.id)
+
+        get "/api/v1/items/find_all?min_price=50&max_price=99.99"
+
+        expect(response).to be_successful
+        items = JSON.parse(response.body, symbolize_names: :true)
+
+        expect(items[:data].count).to eq(1)
+        expect(items[:data].first[:attributes][:id]).to eq(item_2.id)
         
       end
 
