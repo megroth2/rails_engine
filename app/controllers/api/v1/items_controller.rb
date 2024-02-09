@@ -7,7 +7,7 @@ class Api::V1::ItemsController < ApplicationController
         merchant = Merchant.find(params[:merchant_id])
         render json: ItemSerializer.new(merchant.items)
       rescue ActiveRecord::RecordNotFound
-        render json: { error: "Merchant not found" }, status: :not_found
+        render json: { errors: "Merchant not found" }, status: :not_found
       end
     else
       render json: ItemSerializer.new(Item.all)
