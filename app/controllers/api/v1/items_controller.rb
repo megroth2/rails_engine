@@ -1,5 +1,6 @@
 class Api::V1::ItemsController < ApplicationController
-  # refactor idea: remove nested if statements
+  # refactor idea: add set_merchant and set_item private methods, add a before_action for each to reduce redundancy of `merchant = Merchant.find(params[:merchant_id])` and `item = Item.find(params[:id])` - this can likely be applied to most controllers, so maybe even move it to the application controller
+  # refactor idea: remove nested if statements from index action
   def index
     if params[:merchant_id]
       merchant = Merchant.find(params[:merchant_id])

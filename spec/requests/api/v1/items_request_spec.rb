@@ -161,7 +161,11 @@ describe "Items API" do
 
       expect(item[:data][:attributes]).to have_key(:name)
       expect(item[:data][:attributes][:name]).to be_a(String)
+      
+      expect(item[:data][:attributes]).to have_key(:description)
       expect(item[:data][:attributes][:description]).to be_a(String)
+
+      expect(item[:data][:attributes]).to have_key(:unit_price)
       expect(item[:data][:attributes][:unit_price]).to be_a(Float)
     end
   end

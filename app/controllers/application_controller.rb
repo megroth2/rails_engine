@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::API
+  # refactor idea: continue adding error handling to the application controller
   rescue_from ActiveRecord::InvalidForeignKey, with: :not_found_response
   rescue_from ActiveRecord::RecordNotFound, with: :not_found_response
 
