@@ -171,7 +171,7 @@ describe "Items API" do
   end
 
   describe "delete an item" do
-    it "can delete an item" do # destroys the corresponsing record and any associated data
+    it "can delete an item" do
       merchant = FactoryBot.create(:merchant)
       item = FactoryBot.create(:item, merchant_id: merchant.id)
   
