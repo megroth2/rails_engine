@@ -30,7 +30,7 @@ FactoryBot.define do
   end
 
   factory :invoice do
-    status {"shipped"} # we should refactor this when we know what other statuses are expected
+    status {"shipped"}
     merchant
     customer
   end

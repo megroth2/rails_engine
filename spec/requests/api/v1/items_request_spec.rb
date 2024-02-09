@@ -161,13 +161,17 @@ describe "Items API" do
 
       expect(item[:data][:attributes]).to have_key(:name)
       expect(item[:data][:attributes][:name]).to be_a(String)
+      
+      expect(item[:data][:attributes]).to have_key(:description)
       expect(item[:data][:attributes][:description]).to be_a(String)
+
+      expect(item[:data][:attributes]).to have_key(:unit_price)
       expect(item[:data][:attributes][:unit_price]).to be_a(Float)
     end
   end
 
   describe "delete an item" do
-    it "can delete an item" do # destroys the corresponsing record and any associated data
+    it "can delete an item" do
       merchant = FactoryBot.create(:merchant)
       item = FactoryBot.create(:item, merchant_id: merchant.id)
   
@@ -197,7 +201,7 @@ describe "Items API" do
       expect{InvoiceItem.find(invoice_item.id)}.to raise_error(ActiveRecord::RecordNotFound)
     end
 
-    # unclear on the requirements - is this expected as well?
+    # refactor needed on destroy_with_invoice_items_and_invoices method in item.rb to make this pass
     # xit "destroys any INVOICES where this was the only item on an invoice" do
     #   merchant = FactoryBot.create(:merchant)
     #   item = FactoryBot.create(:item, merchant_id: merchant.id)
@@ -233,7 +237,7 @@ describe "Items API" do
                   "name": "value1",
                   "description": "value2",
                   "unit_price": 100.99,
-                  "merchant_id": merchant.id # couldn't hardcode the number due to thousands of merchants being created through running tests
+                  "merchant_id": merchant.id
                   }
 
     headers = { "CONTENT_TYPE" => "application/json" }
@@ -297,7 +301,7 @@ describe "Items API" do
                   "name": "value1",
                   "description": "value2",
                   "unit_price": 100.99,
-                  "merchant_id": merchant.id # couldn't hardcode the number due to thousands of merchants being created through running tests
+                  "merchant_id": merchant.id
                   }
 
     headers = { "CONTENT_TYPE" => "application/json" }
@@ -377,20 +381,116 @@ describe "Items API" do
     end
   end
 
-  describe "item endpoints" do
-    it "finds all items based on search criteria" do
-     merchant = FactoryBot.create(:merchant)
-     item_1 =Item.create!(name: "Computer Item", description: "fsfsadfs", unit_price: 3.99, merchant_id: merchant.id)
-     item_2 =Item.create!(name: "Turing Item", description: "fsfsadfs", unit_price: 5.99, merchant_id: merchant.id)
-     item_3 =Item.create!(name: "Ring World Item", description: "fsfsadfs", unit_price: 99.99, merchant_id: merchant.id)
+  describe "get items based on search criteria" do
+    describe "index action happy paths" do
+      it "finds all items by name fragment" do
+        merchant = FactoryBot.create(:merchant)
+        item_1 = FactoryBot.create(:item, name: "Computer Item", merchant_id: merchant.id)
+        item_2 = FactoryBot.create(:item, name: "Turing Item", merchant_id: merchant.id)
+        item_3 = FactoryBot.create(:item, name: "Ring World Item", merchant_id: merchant.id)
 
-      get "/api/v1/items/find_all?name=ring"
+        get "/api/v1/items/find_all?name=ring"
 
-      expect(response).to be_successful
-     items = JSON.parse(response.body, symbolize_names: :true)
-# require "pry"; binding.pry
-      # return a single object, if found
-      expect(items[:data].count).to eq(2)
+        expect(response).to be_successful
+        items = JSON.parse(response.body, symbolize_names: :true)
+
+        expect(items[:data].count).to eq(2)
+        expect(items[:data].first[:attributes][:name]).to eq(item_3.name)
+        expect(items[:data].second[:attributes][:name]).to eq(item_2.name)
+      end
+
+      xit "finds all items by min and max price" do
+        merchant = FactoryBot.create(:merchant)
+        item_1 = FactoryBot.create(:item, unit_price: 3.99, merchant_id: merchant.id)
+        item_2 = FactoryBot.create(:item, unit_price: 12.34, merchant_id: merchant.id)
+        item_3 = FactoryBot.create(:item, unit_price: 100, merchant_id: merchant.id)
+
+        get "/api/v1/items/find_all?min_price=4.99&max_price=99.99"
+
+        expect(response).to be_successful
+        items = JSON.parse(response.body, symbolize_names: :true)
+
+        expect(items[:data].count).to eq(1)
+        expect(items[:data].first[:attributes][:name]).to eq(item_2.name)
+      end
+
+      it "finds all items by min price" do
+        merchant = FactoryBot.create(:merchant)
+        item_1 = Item.create!(name: "Computer Item", description: "fsfsadfs", unit_price: 49.00, merchant_id: merchant.id)
+        item_2 = Item.create!(name: "Turing Item", description: "fsfsadfs", unit_price: 75.55, merchant_id: merchant.id)
+        item_3 = Item.create!(name: "Ring World Item", description: "fsfsadfs", unit_price: 100, merchant_id: merchant.id)
+
+        get "/api/v1/items/find_all?min_price=50"
+
+        expect(response).to be_successful
+        items = JSON.parse(response.body, symbolize_names: :true)
+
+        expect(items[:data].count).to eq(2)
+        expect(items[:data].first[:attributes][:name]).to eq(item_3.name)
+        expect(items[:data].second[:attributes][:name]).to eq(item_2.name)
+      end
+
+      it "finds all items by max price" do
+        merchant = FactoryBot.create(:merchant)
+        item_1 = Item.create!(name: "Computer Item", description: "fsfsadfs", unit_price: 49.00, merchant_id: merchant.id)
+        item_2 = Item.create!(name: "Turing Item", description: "fsfsadfs", unit_price: 75.55, merchant_id: merchant.id)
+        item_3 = Item.create!(name: "Ring World Item", description: "fsfsadfs", unit_price: 100, merchant_id: merchant.id)
+
+        get "/api/v1/items/find_all?max_price=99.99"
+
+        expect(response).to be_successful
+        items = JSON.parse(response.body, symbolize_names: :true)
+
+        expect(items[:data].count).to eq(2)
+        expect(items[:data].first[:attributes][:name]).to eq(item_1.name)
+        expect(items[:data].second[:attributes][:name]).to eq(item_2.name)
+      end
+    end
+
+    describe "index action sad paths - no item found" do
+      xit "sad path, no item found by name fragment" do
+       
+      end
+
+      xit "sad path, no item found by min and max price" do
+
+      end
+
+      xit "sad path, no item found by min price" do
+        
+      end
+
+      xit "sad path, no item found by max price" do
+        
+      end
+    end
+
+    describe "index action sad paths - less than 0" do
+      xit "sad path, min price is less than 0" do
+        # pm.expect(error).to.equal(null);
+        # pm.expect(response.code).to.eq(400);
+        # var payload = response.json();
+        # pm.expect(payload).to.have.property('errors')
+      end
+
+      xit "sad path, max price is less than 0" do
+        # pm.expect(error).to.equal(null);
+        # pm.expect(response.code).to.eq(400);
+        # var payload = response.json();
+        # pm.expect(payload).to.have.property('errors')
+      end
+    end
+
+    describe "index action sad paths - sent too many criteria" do
+      xit "sad path, cannot send name and min price" do
+        # pm.expect(error).to.equal(null);
+        # pm.expect(response.code).to.eq(400);
+      end
+
+      xit "sad path, cannot send name and max price" do
+        # pm.expect(error).to.equal(null);
+        # pm.expect(response.code).to.eq(400); 
+      end
     end
   end
 end
