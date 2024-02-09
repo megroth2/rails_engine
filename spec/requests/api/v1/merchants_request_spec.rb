@@ -125,11 +125,13 @@ describe "Merchants API" do
       get "/api/v1/merchants/find?name=ring"
 
       expect(response).to be_successful
-      merchants = JSON.parse(response.body, symbolize_names: :true)
-
-      # binding.pry
-      expect(merchants[:data].count).to eq(1)
-      expect(merchants[:data][:id].to_i).to eq(merchant_3.id)
+      merchant = JSON.parse(response.body, symbolize_names: :true)
+      # return a single object, if found
+      expect(merchant[:data].count).to eq(1)
+      # return the first object in the database in case-insensitive alphabetical order
+      # if multiple matches are found
+      expect(merchant[:data].first[:attributes][:name]).to eq("Ring World")
+      # expect(merchants[:data][:id].to_i).to eq(merchant_3.id)
     end
 
     xit "sad path, no fragment matched" do
