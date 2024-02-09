@@ -126,15 +126,7 @@ describe "Merchants API" do
 
       expect(response).to be_successful
       merchants = JSON.parse(response.body, symbolize_names: :true)
-
-      # return a single object, if found
       expect(merchants[:data].count).to eq(1)
-      # return the first object in the database in case-insensitive alphabetical order
-      # if multiple matches are found
-      # expect(merchants[:data].count).to eq(1)
-      
-      # get "/api/vi/merchants/find?name=ring"
-
     end
 
     xit "no merchant found by name fragment" do

@@ -12,7 +12,7 @@ class Api::V1::FindItemsController < ApplicationController
   # end    
 
   def index
-    if params[:name] && params[:min_price] && params[:max_price]
+    if params[:name] && (params[:min_price] || params[:max_price])
       # error - too many search criteria/invalid search
     elsif params[:name]
       items = Item.find_items_by_name(params[:name])

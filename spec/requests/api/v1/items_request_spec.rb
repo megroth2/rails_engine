@@ -197,7 +197,6 @@ describe "Items API" do
       expect{InvoiceItem.find(invoice_item.id)}.to raise_error(ActiveRecord::RecordNotFound)
     end
 
-    # unclear on the requirements - is this expected as well?
     # xit "destroys any INVOICES where this was the only item on an invoice" do
     #   merchant = FactoryBot.create(:merchant)
     #   item = FactoryBot.create(:item, merchant_id: merchant.id)
@@ -233,7 +232,7 @@ describe "Items API" do
                   "name": "value1",
                   "description": "value2",
                   "unit_price": 100.99,
-                  "merchant_id": merchant.id # couldn't hardcode the number due to thousands of merchants being created through running tests
+                  "merchant_id": merchant.id
                   }
 
     headers = { "CONTENT_TYPE" => "application/json" }
@@ -297,7 +296,7 @@ describe "Items API" do
                   "name": "value1",
                   "description": "value2",
                   "unit_price": 100.99,
-                  "merchant_id": merchant.id # couldn't hardcode the number due to thousands of merchants being created through running tests
+                  "merchant_id": merchant.id
                   }
 
     headers = { "CONTENT_TYPE" => "application/json" }
@@ -407,27 +406,39 @@ describe "Items API" do
         items = JSON.parse(response.body, symbolize_names: :true)
 
         expect(items[:data].count).to eq(1)
-        expect(items[:data].first[:attributes][:id]).to eq(item_2.id)
+        expect(items[:data].first[:attributes][:name]).to eq(item_2.name)
       end
 
-      xit "finds all items by min price" do
+      it "finds all items by min price" do
         merchant = FactoryBot.create(:merchant)
         item_1 = Item.create!(name: "Computer Item", description: "fsfsadfs", unit_price: 49.00, merchant_id: merchant.id)
         item_2 = Item.create!(name: "Turing Item", description: "fsfsadfs", unit_price: 75.55, merchant_id: merchant.id)
         item_3 = Item.create!(name: "Ring World Item", description: "fsfsadfs", unit_price: 100, merchant_id: merchant.id)
 
-        get "/api/v1/items/find_all?min_price=50&max_price=99.99"
+        get "/api/v1/items/find_all?min_price=50"
 
         expect(response).to be_successful
         items = JSON.parse(response.body, symbolize_names: :true)
 
-        expect(items[:data].count).to eq(1)
-        expect(items[:data].first[:attributes][:id]).to eq(item_2.id)
-        
+        expect(items[:data].count).to eq(2)
+        expect(items[:data].first[:attributes][:name]).to eq(item_3.name)
+        expect(items[:data].second[:attributes][:name]).to eq(item_2.name)
       end
 
-      xit "finds all items by max price" do
-        
+      it "finds all items by max price" do
+        merchant = FactoryBot.create(:merchant)
+        item_1 = Item.create!(name: "Computer Item", description: "fsfsadfs", unit_price: 49.00, merchant_id: merchant.id)
+        item_2 = Item.create!(name: "Turing Item", description: "fsfsadfs", unit_price: 75.55, merchant_id: merchant.id)
+        item_3 = Item.create!(name: "Ring World Item", description: "fsfsadfs", unit_price: 100, merchant_id: merchant.id)
+
+        get "/api/v1/items/find_all?max_price=99.99"
+
+        expect(response).to be_successful
+        items = JSON.parse(response.body, symbolize_names: :true)
+
+        expect(items[:data].count).to eq(2)
+        expect(items[:data].first[:attributes][:name]).to eq(item_1.name)
+        expect(items[:data].second[:attributes][:name]).to eq(item_2.name)
       end
     end
 
