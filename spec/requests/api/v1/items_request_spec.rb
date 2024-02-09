@@ -377,20 +377,73 @@ describe "Items API" do
     end
   end
 
-  describe "item endpoints" do
-    it "finds all items based on search criteria" do
-     merchant = FactoryBot.create(:merchant)
-     item_1 =Item.create!(name: "Computer Item", description: "fsfsadfs", unit_price: 3.99, merchant_id: merchant.id)
-     item_2 =Item.create!(name: "Turing Item", description: "fsfsadfs", unit_price: 5.99, merchant_id: merchant.id)
-     item_3 =Item.create!(name: "Ring World Item", description: "fsfsadfs", unit_price: 99.99, merchant_id: merchant.id)
+  describe "get items based on search criteria" do
+    describe "index action happy paths" do
+      it "finds all items by name fragment" do
+        merchant = FactoryBot.create(:merchant)
+        item_1 =Item.create!(name: "Computer Item", description: "fsfsadfs", unit_price: 3.99, merchant_id: merchant.id)
+        item_2 =Item.create!(name: "Turing Item", description: "fsfsadfs", unit_price: 5.99, merchant_id: merchant.id)
+        item_3 =Item.create!(name: "Ring World Item", description: "fsfsadfs", unit_price: 99.99, merchant_id: merchant.id)
 
-      get "/api/vi/items/find_all?name=ring"
+        get "/api/v1/items/find_all?name=ring"
 
-      expect(response).to be_successful
-     items = JSON.parse(response.body, symbolize_names: :true)
-# require "pry"; binding.pry
-      # return a single object, if found
-      expect(items[:data].count).to eq(2)
+        expect(response).to be_successful
+        items = JSON.parse(response.body, symbolize_names: :true)
+
+        expect(items[:data].count).to eq(2)
+        # expect(items[:data].)
+
+      end
+
+      xit "finds all items by min and max price" do
+
+      end
+
+      xit "finds all items by min price" do
+        
+      end
+
+      xit "finds all items by max price" do
+        
+      end
+    end
+
+    describe "index action sad paths - no item found"
+      xit "sad path - no item found by name fragment" do
+        # expect error
+      end
+
+      xit "sad path - no item found by min and max price" do
+
+      end
+
+      xit "sad path - no item found by min price" do
+        
+      end
+
+      xit "sad path - no item found by max price" do
+        
+      end
+    end
+
+    describe "index action sad paths - less than 0"
+      xit "sad path - min price is less than 0" do
+        
+      end
+
+      xit "sad path - max price is less than 0" do
+        
+      end
+    end
+
+    describe "index action sad paths - sent too many criteria"
+      xit "sad path - cannot send name and min price" do
+        
+      end
+
+      xit "sad path - cannot send name and max price" do
+        
+      end
     end
   end
 end

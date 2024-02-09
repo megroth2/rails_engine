@@ -116,13 +116,13 @@ describe "Merchants API" do
     end
   end
 
-  describe "merchant 'find one' endpoints" do
-    it "returns a single object, if found" do
+  describe "get one merchant based on search criteria" do
+    it "finds one merchant by name fragment" do
       merchant_1 = Merchant.create(name: "Computers R' Us")
       merchant_2 = Merchant.create(name: "Turing")
       merchant_3 = Merchant.create(name: "Ring World")
 
-      get "/api/vi/merchants/find?name=ring"
+      get "/api/v1/merchants/find?name=ring"
 
       expect(response).to be_successful
       merchants = JSON.parse(response.body, symbolize_names: :true)
@@ -135,6 +135,10 @@ describe "Merchants API" do
       
       # get "/api/vi/merchants/find?name=ring"
 
+    end
+
+    xit "no merchant found by name fragment" do
+      # expect error
     end
   end
 end

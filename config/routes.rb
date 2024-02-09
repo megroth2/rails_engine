@@ -8,8 +8,8 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
   get "/api/v1/items/:id/merchant", to: "api/v1/items#merchant"
-  get "/api/vi/merchants/find", to: "api/v1/find#index"
-  get "/api/vi/items/find_all", to: "api/v1/find_items#index"
+  get "/api/v1/merchants/find", to: "api/v1/find_merchants#index"
+  get "/api/v1/items/find_all", to: "api/v1/find_items#index"
  
   namespace :api do
     namespace :v1 do
