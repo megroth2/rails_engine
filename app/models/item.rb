@@ -36,6 +36,11 @@ class Item < ApplicationRecord
     Item.where(unit_price >= min_price.to_f)
     .order(:name)
   end
+
+  def self.find_items_by_max_price(max_price)
+    Item.where(unit_price <= max_price.to_f)
+    .order(:name)
+  end
 end
 
 

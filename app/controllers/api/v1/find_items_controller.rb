@@ -11,7 +11,6 @@ class Api::V1::FindItemsController < ApplicationController
   #   end
   # end    
 
-  # refactor idea: we can pull a lot of the logic below out into helper methods
   def index
     if params[:name] && params[:min_price] && params[:max_price]
       # error - too many search criteria/invalid search
@@ -25,9 +24,8 @@ class Api::V1::FindItemsController < ApplicationController
       items = Item.find_items_by_min_price(params[:min_price])
       render json: ItemSerializer.new(items)
     elsif params[:max_price]
-      render json: ItemSerializer.new(Item
-      .where(item.unit_price <= params[:max_price].to_f)
-      .order(:name))
+      items = Item.find_items_by_max_price(params[:max_price])
+      render json: ItemSerializer.new(items)
     else
       # handle error
     end
