@@ -42,6 +42,3 @@ class Item < ApplicationRecord
     .order(:name)
   end
 end
-
-
-
