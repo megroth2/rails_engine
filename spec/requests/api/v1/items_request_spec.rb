@@ -447,49 +447,79 @@ describe "Items API" do
       end
     end
 
-    xdescribe "index action sad paths - no item found" do
+    describe "index action sad paths - no item found" do
+      it "sad path, no param given" do
+        get "/api/v1/items/find_all?"
+
+        expect(response).to_not be_successful
+        expect(response.status).to eq(400)
+      end
+
+      it "sad path, empty param given" do
+        get "/api/v1/items/find_all?name="
+
+        expect(response).to_not be_successful
+        expect(response.status).to eq(400)
+      end
+
       it "sad path, no item found by name fragment" do
-       
+        get "/api/v1/items/find_all?name=q"
+
+        expect(response).to_not be_successful
+        expect(response.status).to eq(400)
       end
 
       it "sad path, no item found by min and max price" do
-
+        get "/api/v1/merchants/merchant_items?min_price=1000&max_price=1"
+    
+        expect(response).to_not be_successful
+        expect(response.status).to eq(404)
       end
 
       it "sad path, no item found by min price" do
-        
+        get "/api/v1/merchants/merchant_items?min_price=10000"
+    
+        expect(response).to_not be_successful
+        expect(response.status).to eq(404)
       end
 
       it "sad path, no item found by max price" do
-        
+        get "/api/v1/merchants/merchant_items?max_price=1"
+    
+        expect(response).to_not be_successful
+        expect(response.status).to eq(404)
       end
     end
 
-    xdescribe "index action sad paths - less than 0" do
+    describe "index action sad paths - less than 0" do
       it "sad path, min price is less than 0" do
-        # pm.expect(error).to.equal(null);
-        # pm.expect(response.code).to.eq(400);
-        # var payload = response.json();
-        # pm.expect(payload).to.have.property('errors')
+        get "/api/v1/items/find_all?min_price=-49"
+
+        expect(response).to_not be_successful
+        expect(response.status).to eq(400)
       end
 
       it "sad path, max price is less than 0" do
-        # pm.expect(error).to.equal(null);
-        # pm.expect(response.code).to.eq(400);
-        # var payload = response.json();
-        # pm.expect(payload).to.have.property('errors')
+        get "/api/v1/items/find_all?max_price=-49"
+
+        expect(response).to_not be_successful
+        expect(response.status).to eq(400)
       end
     end
 
-    xdescribe "index action sad paths - sent too many criteria" do
+    describe "index action sad paths - sent too many criteria" do
       it "sad path, cannot send name and min price" do
-        # pm.expect(error).to.equal(null);
-        # pm.expect(response.code).to.eq(400);
+        get "/api/v1/items/find_all?name=ring&min_price=49.00"
+
+        expect(response).to_not be_successful
+        expect(response.status).to eq(400)
       end
 
       it "sad path, cannot send name and max price" do
-        # pm.expect(error).to.equal(null);
-        # pm.expect(response.code).to.eq(400); 
+        get "/api/v1/items/find_all?name=ring&max_price=55.00"
+
+        expect(response).to_not be_successful
+        expect(response.status).to eq(400)
       end
     end
   end

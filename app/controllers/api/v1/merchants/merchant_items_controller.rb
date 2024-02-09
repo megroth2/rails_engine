@@ -8,10 +8,14 @@ class Api::V1::Merchants::MerchantItemsController < ApplicationController
       render json: { error: "Cannot search by both name and price" }, status: :bad_request
     elsif params[:name]
       items = Item.find_items_by_name(params[:name])
-      render json: ItemSerializer.new(items)
-    elsif params[:min_price] && params[:min_price].to_f < 0
+      if items.empty?
+        render json: {error: "No item found by name fragment"}, status: :bad_request
+      else
+        render json: ItemSerializer.new(items)
+      end
+    elsif params[:min_price].to_f < 0
       render json: { errors: "Min price less than 0" }, status: :bad_request
-    elsif params[:max_price] && params[:max_price].to_f < 0
+    elsif params[:max_price].to_f < 0
       render json: { errors: "Max price less than 0" }, status: :bad_request  
     elsif params[:min_price] && params[:max_price]
       items = Item.find_items_by_min_and_max_price(params[:min_price], params[:max_price])
