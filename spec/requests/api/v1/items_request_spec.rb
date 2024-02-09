@@ -384,7 +384,7 @@ describe "Items API" do
      item_2 =Item.create!(name: "Turing Item", description: "fsfsadfs", unit_price: 5.99, merchant_id: merchant.id)
      item_3 =Item.create!(name: "Ring World Item", description: "fsfsadfs", unit_price: 99.99, merchant_id: merchant.id)
 
-      get "/api/vi/items/find_all?name=ring"
+      get "/api/v1/items/find_all?name=ring"
 
       expect(response).to be_successful
      items = JSON.parse(response.body, symbolize_names: :true)
